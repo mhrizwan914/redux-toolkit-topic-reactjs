@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// React
+import React from "react";
+// Components
+import TodoForm from "./components/TodoForm";
+import TodoItem from "./components/TodoItem";
+// React Redux
+import { useSelector } from "react-redux";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const todos = useSelector(state => state.todos);
+  React.useEffect(() => {
+    const todos = JSON.parse(localStorage.getItem("todos"));
 
+    if (todos && todos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  }, [todos])
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <section>
+      <div className="h-screen bg-slate-800">
+        <div className="container">
+          <TodoForm />
+          <div className="w-1/2 m-auto p-5 bg-slate-300 mt-5 grid grid-cols-1 gap-3">
+            {
+              todos && todos.map((e) => (
+                <TodoItem key={e.id} todo={e} />
+              ))
+            }
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </section>
   )
 }
 
-export default App
+export default App;
